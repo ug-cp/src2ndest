@@ -74,6 +74,7 @@ rsync -a -r "-e 512" /foo/ /bar/
 
 ## License
 
+```txt
     Copyright (C) 2022  Daniel Mohr
 
     This program is free software: you can redistribute it and/or modify
@@ -88,3 +89,4 @@ rsync -a -r "-e 512" /foo/ /bar/
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
