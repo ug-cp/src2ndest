@@ -1,0 +1,87 @@
+pre-commit:
+  image:
+    name: alpine:latest
+  script:
+    - date
+    - apk add --no-cache bash gcc git libc-dev npm py3-pip python3-dev
+    - pip3 install pre-commit
+    - pre-commit --version
+    - pre-commit run --all-files
+
+test:
+  image:
+    name: alpine:latest
+  script:
+    - date
+    - apk add --no-cache bash rsync
+    - install -p -o root -g root -m 755 rsync2multi /usr/local/bin/rsync2multi
+    # test 1
+    - cd $(mktemp --directory)
+    - mkdir a b
+    - date > a/d
+    - test -f a/d
+    - test ! -f b/d
+    - rsync2multi -a -r a/ b/
+    - test -f b/d
+    # test 2
+    - cd $(mktemp --directory)
+    - mkdir a b c
+    - date > a/d
+    - test -f a/d
+    - test ! -f b/d
+    - test ! -f c/d
+    - rsync2multi -a -r a/ b/ c/
+    - test -f b/d
+    - test -f c/d
+    # test 3
+    - cd $(mktemp --directory)
+    - mkdir a b c d
+    - date > a/e
+    - test -f a/e
+    - test ! -f b/e
+    - test ! -f c/e
+    - test ! -f d/e
+    - rsync2multi -a -r a/ b/ c/ d/
+    - test -f b/e
+    - test -f c/e
+    - test -f d/e
+    # test 4
+    - cd $(mktemp --directory)
+    - mkdir "a a" "b " " c"
+    - date > " c/foo"
+    - test ! -f "a a/foo"
+    - test ! -f "b /foo"
+    - test -f " c/foo"
+    - rsync2multi -a -r " c/" "a a/" "b /"
+    - test -f "a a/foo"
+    - test -f "b /foo"
+    # test 5
+    - cd $(mktemp --directory)
+    - mkdir "a a" "b " " c"
+    - date > " c/foo"
+    - test ! -f "a a/foo"
+    - test ! -f "b /foo"
+    - test -f " c/foo"
+    - rsync2multi -a -r \ c/ a\ a/ b\ /
+    - test -f "a a/foo"
+    - test -f "b /foo"
+    # test 6
+    - cd $(mktemp --directory)
+    - mkdir "a a" "b " " c"
+    - date > " c/foo"
+    - test ! -f "a a/foo"
+    - test ! -f "b /foo"
+    - test -f " c/foo"
+    - rsync2multi -a -r "-e 512" \ c/ a\ a/ b\ /
+    - test -f "a a/foo"
+    - test -f "b /foo"
+    # go on from here for test 7
+    - date > " c/bar"
+    - rm " c/foo"
+    - rsync2multi -a -r --delete "-e 512" \ c/ a\ a/ b\ /
+    - test ! -f "a a/foo"
+    - test ! -f "b /foo"
+    - test -f "a a/bar"
+    - test -f "b /bar"
+    - diff " c/bar" "a a/bar"
+    - diff " c/bar" "b /bar"
