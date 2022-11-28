@@ -75,6 +75,7 @@ rsync -a -r "-e 512" /foo/ /bar/
 ## License
 
 ```txt
+    rsync2multi
     Copyright (C) 2022  Daniel Mohr
 
     This program is free software: you can redistribute it and/or modify

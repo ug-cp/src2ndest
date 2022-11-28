@@ -8,6 +8,7 @@
 # Every argument not starting with "-" is interpreted as a path.
 # The first path is used as SRC and the other paths are used as destinations.
 #
+#    rsync2multi
 #    Copyright (C) 2022  Daniel Mohr
 #
 #    This program is free software: you can redistribute it and/or modify
