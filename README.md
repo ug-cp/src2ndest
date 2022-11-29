@@ -40,6 +40,14 @@ Or if you only want to install it in your user space:
 install -p -m 755 src2ndest ~/bin/src2ndest
 ```
 
+If you want `src2ndesttol`, which is more tolerant and not terminates if an
+error arises, you can create and install it:
+
+```sh
+./adon/generate_tolerate_patch
+install -p -m 755 src2ndesttol ~/bin/src2ndesttol
+```
+
 ## Examples
 
 Example 1:

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+echo -e "2d1\n< set -e" | patch -i - -o src2ndesttol src2ndest
+sed -i '/If an error arises src2ndest terminates/,+5 d' src2ndesttol
+sed -i 's/src2ndest/src2ndesttol/g' src2ndesttol
