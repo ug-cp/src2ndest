@@ -8,11 +8,11 @@ for testfile in "$testdir"/test*; do
     if [[ ! "$testfile" == *~ ]]; then
 	echo -n -e "$testfile"
 	err=0
-	"$testfile" &>$tmpfile || err=$?
+	"$testfile" &>"$tmpfile" || err=$?
 	if [ ! $err == 0 ]; then
 	    echo ": ERROR"
 	    result=$err
-	    cat $tmpfile
+	    cat "$tmpfile"
 	    echo
 	else
 	    echo ": pass"
