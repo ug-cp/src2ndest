@@ -1,19 +1,17 @@
 # `src2ndest`
 
-> usage: src2ndest prg [OPTION...] SRC [DEST...]
+> usage: src2ndest PRG [OPTION...] SRC [DEST...]
 
-This is a small and simple bash script to do a `rsync` from one `SRC`
-to multiple `DEST`.
-This is a small and simple script to call `prg` for one `SRC` and
+`src2ndest` is a small and simple script to call `PRG` for one `SRC` and
 multiple `DEST`.
-For example using `cp` or `rsync` as `prg` you can copy files from on source
+For example using `cp` or `rsync` as `PRG` you can copy files from on source
 directory to multiple destination directories.
 
 The principle is simple:
 
 Every argument starting with "-" is interpreted as an option.
-Every argument not starting with "-" is interpreted as a `prg`, `SRC` or `DEST`.
-The first one is used as `prg`. The second one as `SRC`. And the remaining ones
+Every argument not starting with "-" is interpreted as a `PRG`, `SRC` or `DEST`.
+The first one is used as `PRG`. The second one as `SRC`. And the remaining ones
 as destinations `DEST`.
 
 This means you can not give a parameter to a flag directly.
