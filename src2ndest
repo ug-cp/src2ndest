@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+set -e
+
+# src2ndest prg [OPTION...] SRC [DEST...]
+#
+# This is a small and simple script to call prg for one SRC and multiple DEST.
+# For example using cp or rsync as prg you can copy files from on source
+# directory to multiple destination directories.
+#
+# Every argument starting with "-" is interpreted as an option.
+# Every argument not starting with "-" is interpreted as a prg, SRC or DEST.
+# The first one is used as prg. The second one as SRC. And the remaining ones
+# as destinations DEST.
+#
+#    src2ndest
+#    Copyright (C) 2022  Daniel Mohr
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+if [ $# = "0" ]; then
+    /bin/cat <<EOF >&2
+src2ndest prg [OPTION...] SRC [DEST...]
+
+This is a small and simple script to call prg for one SRC and multiple DEST.
+For example using cp or rsync as prg you can copy files from on source
+directory to multiple destination directories.
+
+The principle is simple:
+
+Every argument starting with "-" is interpreted as an option.
+Every argument not starting with "-" is interpreted as a prg, SRC or DEST.
+The first one is used as prg. The second one as SRC. And the remaining ones
+as destinations DEST.
+
+This means you can not give a parameter to a flag directly.
+For example, instead of '-B 512' use '--block-size=512' or '"-B 512"'.
+Or instead of '-e "ssh -p 2234"' use '--rsh="ssh -p 2234"'.
+
+If an error arises src2ndest terminates with the exit status of the of the
+failed command. For example if you use rsync to sync to 3 destinations and
+the second destination does not exists at all, the first destination gets
+synced and the src2ndest terminates with the exit status of rsync for the
+second destination.
+
+Example 1:
+
+src2ndest cp foo bar/ baz/
+
+This copies the file foo to the directories bar/ and baz/ and is the same as:
+
+cp foo bar/
+cp foo baz/
+
+Example 2:
+
+src2ndest rsync -a -r --delete --exclude=.git -v /foo/ /bar/ /baz/
+
+This syncs the directory /foo/ to the two destinations /bar/ and /baz/.
+This is similar to:
+
+rsync -a -r --delete --exclude=.git -v /foo/ /bar/
+rsync -a -r --delete --exclude=.git -v /foo/ /baz/
+
+Instead of src2ndest you can also use the much more general tool xargs:
+
+echo /bar/ /baz/ | xargs -n 1 rsync -a -r --delete --exclude=.git -v /foo/
+
+Unfortunately handling filenames containing blanks is not easy with xargs.
+
+Instead of src2ndest you can also use the much more general tool parallel
+which runs rsync in parallel:
+
+parallel rsync -a -r --delete --exclude=.git -v /foo/ ::: /bar/ /baz/
+
+Example 3:
+
+src2ndest rsync -a -r "-e 512" /foo/ /bar/
+
+This syncs the directory /foo/ to the directory /bar/ with some parameters.
+This is equivalent to:
+
+rsync -a -r "-e 512" /foo/ /bar/
+
+Author: Daniel Mohr
+Date: 2022-11-29
+License: GPLv3 or any later version
+EOF
+    exit 1
+fi
+
+prg=""
+declare -a cmdparams
+src=""
+declare -a dests
+
+for arg in "$@"; do
+    if [ "$(echo "$arg" | cut -b1)" = "-" ]; then
+	params+=("$arg")
+	cmdparams+=("$arg")
+    else
+	if [ -z "$prg" ]; then
+	    prg="$arg"
+	    cmdparams+=("$arg")
+	elif [ -z "$src" ]; then
+	    src="$arg"
+	else
+	    dests+=("$arg")
+	fi
+    fi
+done
+
+for dest in "${dests[@]}"; do
+    "${cmdparams[@]}" "$src" "$dest"
+done

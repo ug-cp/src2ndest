@@ -14,14 +14,14 @@ test:
   script:
     - date
     - apk add --no-cache bash rsync
-    - install -p -o root -g root -m 755 rsync2multi /usr/local/bin/rsync2multi
+    - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     # test 1
     - cd $(mktemp --directory)
     - mkdir a b
     - date > a/d
     - test -f a/d
     - test ! -f b/d
-    - rsync2multi -a -r a/ b/
+    - src2ndest rsync -a -r a/ b/
     - test -f b/d
     # test 2
     - cd $(mktemp --directory)
@@ -30,7 +30,7 @@ test:
     - test -f a/d
     - test ! -f b/d
     - test ! -f c/d
-    - rsync2multi -a -r a/ b/ c/
+    - src2ndest rsync -a -r a/ b/ c/
     - test -f b/d
     - test -f c/d
     # test 3
@@ -41,7 +41,7 @@ test:
     - test ! -f b/e
     - test ! -f c/e
     - test ! -f d/e
-    - rsync2multi -a -r a/ b/ c/ d/
+    - src2ndest rsync -a -r a/ b/ c/ d/
     - test -f b/e
     - test -f c/e
     - test -f d/e
@@ -52,7 +52,7 @@ test:
     - test ! -f "a a/foo"
     - test ! -f "b /foo"
     - test -f " c/foo"
-    - rsync2multi -a -r " c/" "a a/" "b /"
+    - src2ndest rsync -a -r " c/" "a a/" "b /"
     - test -f "a a/foo"
     - test -f "b /foo"
     # test 5
@@ -62,7 +62,7 @@ test:
     - test ! -f "a a/foo"
     - test ! -f "b /foo"
     - test -f " c/foo"
-    - rsync2multi -a -r \ c/ a\ a/ b\ /
+    - src2ndest rsync -a -r \ c/ a\ a/ b\ /
     - test -f "a a/foo"
     - test -f "b /foo"
     # test 6
@@ -72,13 +72,13 @@ test:
     - test ! -f "a a/foo"
     - test ! -f "b /foo"
     - test -f " c/foo"
-    - rsync2multi -a -r "-e 512" \ c/ a\ a/ b\ /
+    - src2ndest rsync -a -r "-e 512" \ c/ a\ a/ b\ /
     - test -f "a a/foo"
     - test -f "b /foo"
     # go on from here for test 7
     - date > " c/bar"
     - rm " c/foo"
-    - rsync2multi -a -r --delete "-e 512" \ c/ a\ a/ b\ /
+    - src2ndest rsync -a -r --delete "-e 512" \ c/ a\ a/ b\ /
     - test ! -f "a a/foo"
     - test ! -f "b /foo"
     - test -f "a a/bar"

@@ -1,41 +1,64 @@
-# `rsync2multi`
+# `src2ndest`
 
-> usage: rsync2multi [OPTION...] SRC [DEST...]
+> usage: src2ndest prg [OPTION...] SRC [DEST...]
 
 This is a small and simple bash script to do a `rsync` from one `SRC`
 to multiple `DEST`.
+This is a small and simple script to call `prg` for one `SRC` and
+multiple `DEST`.
+For example using `cp` or `rsync` as `prg` you can copy files from on source
+directory to multiple destination directories.
 
 The principle is simple:
 
-Every argument starting with "-" is interpreted as an option for `rsync`.
-Every argument not starting with "-" is interpreted as a path.
-The first path is used as `SRC` and the other paths are used as
-destinations `DEST`.
+Every argument starting with "-" is interpreted as an option.
+Every argument not starting with "-" is interpreted as a `prg`, `SRC` or `DEST`.
+The first one is used as `prg`. The second one as `SRC`. And the remaining ones
+as destinations `DEST`.
 
 This means you can not give a parameter to a flag directly.
 For example, instead of '-B 512' use '--block-size=512' or '"-B 512"'.
 Or instead of '-e "ssh -p 1234"' use '--rsh="ssh -p 1234"'.
+
+If an error arises `src2ndest` terminates with the exit status of the of the
+failed command. For example if you use `rsync` to sync to 3 destinations and
+the second destination does not exists at all, the first destination gets
+synced and the `src2ndest` terminates with the exit status of `rsync` for the
+second destination.
 
 ## Installation
 
 To use it, simply copy it to your path, e. g.:
 
 ```sh
-install -p -o root -g root -m 755 rsync2multi /usr/local/bin/rsync2multi
+install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
 ```
 
 Or if you only want to install it in your user space:
 
 ```sh
-install -p -m 755 rsync2multi ~/bin/rsync2multi
+install -p -m 755 src2ndest ~/bin/src2ndest
 ```
 
 ## Examples
 
-Example:
+Example 1:
 
 ```sh
-rsync2multi -a -r --delete --exclude=.git -v /foo/ /bar/ /baz/
+src2ndest cp foo bar/ baz/
+```
+
+This copies the file foo to the directories bar/ and baz/ and is the same as:
+
+```sh
+cp foo bar/
+cp foo baz/
+```
+
+Example 2:
+
+```sh
+src2ndest rsync -a -r --delete --exclude=.git -v /foo/ /bar/ /baz/
 ```
 
 This syncs the directory `/foo/` to the two destinations `/bar/` and `/baz/`.
@@ -46,26 +69,28 @@ rsync -a -r --delete --exclude=.git -v /foo/ /bar/
 rsync -a -r --delete --exclude=.git -v /foo/ /baz/
 ```
 
-Instead of `rsync2multi` you can also use the much more general tool `xargs`:
+Instead of `src2ndest` you can also use the much more general tool `xargs`:
 
 ```sh
 echo /bar/ /baz/ | xargs -n 1 rsync -a -r --delete --exclude=.git -v /foo/
 ```
 
-Instead of `rsync2multi` you can also use the much more general tool `parallel`
+Unfortunately handling filenames containing blanks is not easy with `xargs`.
+
+Instead of `src2ndest` you can also use the much more general tool `parallel`
 which runs `rsync` in parallel:
 
 ```sh
 parallel rsync -a -r --delete --exclude=.git -v /foo/ ::: /bar/ /baz/
 ```
 
-Example:
+Example 3:
 
 ```sh
-rsync2multi -a -r "-e 512" /foo/ /bar/
+src2ndest rsync -a -r "-e 512" /foo/ /bar/
 ```
 
-This syncs the directory `/foo/` to the directory `/bar/`.
+This syncs the directory `/foo/` to the directory `/bar/` with some parameters.
 This is equivalent to:
 
 ```sh
@@ -75,7 +100,7 @@ rsync -a -r "-e 512" /foo/ /bar/
 ## License
 
 ```txt
-    rsync2multi
+    src2ndest
     Copyright (C) 2022  Daniel Mohr
 
     This program is free software: you can redistribute it and/or modify
