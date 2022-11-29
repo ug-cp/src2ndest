@@ -1,3 +1,7 @@
+variables:
+  DEBIAN_FRONTEND: noninteractive
+  APT_GET_INSTALL: "apt-get install --no-install-recommends -q -y"
+
 pre-commit:
   image:
     name: alpine:latest
@@ -8,80 +12,23 @@ pre-commit:
     - pre-commit --version
     - pre-commit run --all-files
 
-test:
+test1:
   image:
     name: alpine:latest
   script:
     - date
     - apk add --no-cache bash rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
-    # test 1
-    - cd $(mktemp --directory)
-    - mkdir a b
-    - date > a/d
-    - test -f a/d
-    - test ! -f b/d
-    - src2ndest rsync -a -r a/ b/
-    - test -f b/d
-    # test 2
-    - cd $(mktemp --directory)
-    - mkdir a b c
-    - date > a/d
-    - test -f a/d
-    - test ! -f b/d
-    - test ! -f c/d
-    - src2ndest rsync -a -r a/ b/ c/
-    - test -f b/d
-    - test -f c/d
-    # test 3
-    - cd $(mktemp --directory)
-    - mkdir a b c d
-    - date > a/e
-    - test -f a/e
-    - test ! -f b/e
-    - test ! -f c/e
-    - test ! -f d/e
-    - src2ndest rsync -a -r a/ b/ c/ d/
-    - test -f b/e
-    - test -f c/e
-    - test -f d/e
-    # test 4
-    - cd $(mktemp --directory)
-    - mkdir "a a" "b " " c"
-    - date > " c/foo"
-    - test ! -f "a a/foo"
-    - test ! -f "b /foo"
-    - test -f " c/foo"
-    - src2ndest rsync -a -r " c/" "a a/" "b /"
-    - test -f "a a/foo"
-    - test -f "b /foo"
-    # test 5
-    - cd $(mktemp --directory)
-    - mkdir "a a" "b " " c"
-    - date > " c/foo"
-    - test ! -f "a a/foo"
-    - test ! -f "b /foo"
-    - test -f " c/foo"
-    - src2ndest rsync -a -r \ c/ a\ a/ b\ /
-    - test -f "a a/foo"
-    - test -f "b /foo"
-    # test 6
-    - cd $(mktemp --directory)
-    - mkdir "a a" "b " " c"
-    - date > " c/foo"
-    - test ! -f "a a/foo"
-    - test ! -f "b /foo"
-    - test -f " c/foo"
-    - src2ndest rsync -a -r "-e 512" \ c/ a\ a/ b\ /
-    - test -f "a a/foo"
-    - test -f "b /foo"
-    # go on from here for test 7
-    - date > " c/bar"
-    - rm " c/foo"
-    - src2ndest rsync -a -r --delete "-e 512" \ c/ a\ a/ b\ /
-    - test ! -f "a a/foo"
-    - test ! -f "b /foo"
-    - test -f "a a/bar"
-    - test -f "b /bar"
-    - diff " c/bar" "a a/bar"
-    - diff " c/bar" "b /bar"
+    # run tests
+    - test/run_tests
+
+test2:
+  image:
+    name: debian:latest
+  script:
+    - date
+    - apt-get update
+    - $APT_GET_INSTALL rsync
+    - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
+    # run tests
+    - test/run_tests

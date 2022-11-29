@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+mkdir a b c d
+date > a/e
+date > a/f
+test -f a/e
+test ! -f b/e
+test ! -f c/e
+test ! -f d/e
+test -f a/f
+test ! -f b/f
+test ! -f c/f
+test ! -f d/f
+src2ndest rsync -a -r a/ b/ c/ d/
+test -f a/e
+test -f b/e
+test -f c/e
+test -f d/e
+test -f a/f
+test -f b/f
+test -f c/f
+test -f d/f

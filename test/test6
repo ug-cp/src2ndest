@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+mkdir "a a" "b " " c"
+date > " c/foo"
+date > " c/bar"
+test ! -f "a a/foo"
+test ! -f "b /foo"
+test -f " c/foo"
+test ! -f "a a/bar"
+test ! -f "b /bar"
+test -f " c/bar"
+src2ndest cp -pr " c" "a a/" "b /"
+test -f "a a/ c/foo"
+test -f "b / c/foo"
+test -f "a a/ c/bar"
+test -f "b / c/bar"

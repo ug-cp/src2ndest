@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+testdir="$(dirname "${BASH_SOURCE[0]}")"
+
+result=0
+tmpfile=$(mktemp)
+for testfile in "$testdir"/test*; do
+    if [[ ! "$testfile" == *~ ]]; then
+	echo -n -e "$testfile"
+	err=0
+	"$testfile" &>$tmpfile || err=$?
+	if [ ! $err == 0 ]; then
+	    echo ": ERROR"
+	    result=$err
+	    cat $tmpfile
+	    echo
+	else
+	    echo ": pass"
+	fi
+    fi
+done
+
+if [ ! $result == 0 ]; then
+    echo -e "\nresult: ERROR (last error: $result)"
+else
+    echo -e "\nresult: pass"
+fi
+
+exit $result

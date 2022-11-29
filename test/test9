@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+mkdir "a a" "b " " c"
+date > " c/foo"
+test ! -f "a a/foo"
+test ! -f "b /foo"
+test -f " c/foo"
+src2ndest rsync -a -r "-e 512" \ c/ a\ a/ b\ /
+test -f "a a/foo"
+test -f "b /foo"
+
+# go on from here as test 7
+date > " c/bar"
+rm " c/foo"
+src2ndest rsync -a -r --delete "-e 512" \ c/ a\ a/ b\ /
+test ! -f "a a/foo"
+test ! -f "b /foo"
+test -f "a a/bar"
+test -f "b /bar"
+diff " c/bar" "a a/bar"
+diff " c/bar" "b /bar"

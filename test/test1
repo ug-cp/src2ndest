@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+mkdir a b
+date > d
+test ! -f a/d
+test ! -f b/d
+src2ndest cp -p d a/ b/
+test -f a/d
+test -f b/d

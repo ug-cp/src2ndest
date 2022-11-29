@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+mkdir "a a" "b " " c"
+date > " c/foo"
+test ! -f "a a/foo"
+test ! -f "b /foo"
+test -f " c/foo"
+src2ndest rsync -a -r \ c/ a\ a/ b\ /
+test -f "a a/foo"
+test -f "b /foo"
