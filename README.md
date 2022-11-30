@@ -42,7 +42,7 @@ If you want `src2ndesttol`, which is more tolerant and not terminates if an
 error arises, you can create and install it:
 
 ```sh
-./adon/generate_tolerate_patch
+add-on/generate_tolerate_patch
 install -p -m 755 src2ndesttol ~/bin/src2ndesttol
 ```
 
