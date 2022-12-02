@@ -19,6 +19,8 @@ test1:
     - date
     - apk add --no-cache bash rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
+    - add-on/generate_tolerate_patch
+    - install -p -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
     - test/run_tests
 
@@ -30,5 +32,7 @@ test2:
     - apt-get update
     - $APT_GET_INSTALL rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
+    - add-on/generate_tolerate_patch
+    - install -p -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
     - test/run_tests
