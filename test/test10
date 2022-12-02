@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+date > a
+mkdir b
+mkdir d
+
+r=0
+echo "expect error:"
+src2ndest cp -p a b/ c/ d/ && exit 255 || r=$?
+test $r = 1
+test -f b/a
+test ! -f c/a
+test ! -f d/a
+
+cd "$(mktemp -d)"
+date > a
+mkdir b
+mkdir d
+echo "expect ignored error:"
+src2ndesttol cp -p a b/ c/ d/
+test $? = 0
+test -f b/a
+test ! -f c/a
+test -f d/a
