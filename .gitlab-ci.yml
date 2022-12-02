@@ -17,7 +17,7 @@ test1:
     name: alpine:latest
   script:
     - date
-    - apk add --no-cache bash rsync
+    - apk add --no-cache bash patch rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
     - install -p -m 755 src2ndesttol /usr/local/bin/src2ndesttol
@@ -30,7 +30,7 @@ test2:
   script:
     - date
     - apt-get update
-    - $APT_GET_INSTALL rsync
+    - $APT_GET_INSTALL patch rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
     - install -p -m 755 src2ndesttol /usr/local/bin/src2ndesttol
