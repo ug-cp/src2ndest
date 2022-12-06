@@ -1,3 +1,11 @@
+---
+author: Daniel Mohr
+date: 2022-12-06
+license: GPLv3 or any later version
+home: https://gitlab.com/ug-cp/fast_samd21_tc
+mirror: https://github.com/ug-cp/fast_samd21_tc
+---
+
 # `src2ndest`
 
 > usage: src2ndest PRG [OPTION...] SRC [DEST...]
@@ -71,6 +79,8 @@ src2ndest rsync -a -r --delete --exclude=.git -v /foo/ /bar/ /baz/
 ```
 
 This syncs the directory `/foo/` to the two destinations `/bar/` and `/baz/`.
+The destinations are handled by `rsync` and therefore they could be
+everything `rsync` handles (e. g. remote shell like ssh or `rsync` daemon).
 This is similar to:
 
 ```sh
