@@ -2,7 +2,7 @@
 
 > usage: src2ndest PRG [OPTION...] SRC [DEST...]
 
-`src2ndest` is a small and simple script to call `PRG` for one `SRC` and
+`src2ndest` is a small and simple bash script to call `PRG` for one `SRC` and
 multiple `DEST`.
 For example using `cp` or `rsync` as `PRG` you can copy files from on source
 directory to multiple destination directories.
@@ -26,7 +26,10 @@ second destination.
 
 ## Installation
 
-To use it, simply copy it to your path, e. g.:
+This script only needs the bash. If you do not have the bash installed,
+install it.
+
+To use this bash script, simply copy it to your path, e. g.:
 
 ```sh
 install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
