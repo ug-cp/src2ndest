@@ -60,3 +60,43 @@ test_freebsd:
     - install -p -o root -g wheel -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
     - test/run_tests
+
+deploy_to_github:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  image:
+    # https://hub.docker.com/_/alpine
+    name: alpine:latest
+  needs:
+    - job: pre-commit
+    - job: test_alpine
+    - job: test_debian
+    - job: test_freebsd
+  script:
+    - date
+    - apk add --no-cache git openssh
+    - mkdir ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - mv $github_deploy_key ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+    - repopath=$(mktemp -d)
+    - git clone --bare --mirror ${CI_REPOSITORY_URL} $repopath
+    - (cd $repopath && git push --prune --mirror git@github.com:ug-cp/src2ndest.git)
+
+deploy_to_repo:
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  image:
+    # https://hub.docker.com/_/alpine
+    name: alpine:latest
+  needs:
+    - job: pre-commit
+    - job: test_alpine
+    - job: test_debian
+    - job: test_freebsd
+  script:
+    - date
+    - apk add --no-cache git
+    - repopath=$(mktemp -d)
+    - git clone --bare --mirror ${CI_REPOSITORY_URL} $repopath
+    - (cd $repopath && git push --prune --mirror $backup_repo)
