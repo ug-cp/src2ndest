@@ -2,8 +2,8 @@
 author: Daniel Mohr
 date: 2022-12-06
 license: GPLv3 or any later version
-home: https://gitlab.com/ug-cp/fast_samd21_tc
-mirror: https://github.com/ug-cp/fast_samd21_tc
+home: https://gitlab.com/ug-cp/src2ndest
+mirror: https://github.com/ug-cp/src2ndest
 ---
 
 # `src2ndest`
