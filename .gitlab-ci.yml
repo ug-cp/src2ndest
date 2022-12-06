@@ -12,7 +12,7 @@ pre-commit:
     - pre-commit --version
     - pre-commit run --all-files
 
-test1:
+test_alpine:
   image:
     name: alpine:latest
   script:
@@ -20,11 +20,11 @@ test1:
     - apk add --no-cache bash patch rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
-    - install -p -m 755 src2ndesttol /usr/local/bin/src2ndesttol
+    - install -p -o root -g root -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
     - test/run_tests
 
-test2:
+test_debian:
   image:
     name: debian:latest
   script:
@@ -33,6 +33,19 @@ test2:
     - $APT_GET_INSTALL patch rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
-    - install -p -m 755 src2ndesttol /usr/local/bin/src2ndesttol
+    - install -p -o root -g root -m 755 src2ndesttol /usr/local/bin/src2ndesttol
+    # run tests
+    - test/run_tests
+
+test_freebsd:
+  tags:
+    - FreeBSD-13-amd64
+  script:
+    - date
+    - pkg -v
+    - pkg install -y bash patch rsync
+    - install -p -o root -g wheel -m 755 src2ndest /usr/local/bin/src2ndest
+    - add-on/generate_tolerate_patch
+    - install -p -o root -g wheel -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
     - test/run_tests
