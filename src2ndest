@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# src2ndest PRG [OPTION...] SRC [DEST...]
-#
-# src2ndest is a small and simple script to call PRG for one SRC and
-# multiple DEST.
-# For example using cp or rsync as PRG you can copy files from on source
-# directory to multiple destination directories.
-#
-# Every argument starting with "-" is interpreted as an option.
-# Every argument not starting with "-" is interpreted as a PRG, SRC or DEST.
-# The first one is used as PRG. The second one as SRC. And the remaining ones
-# as destinations DEST.
-#
 #    src2ndest
 #    Copyright (C) 2022  Daniel Mohr
 #
@@ -33,7 +21,7 @@ if [ $# = "0" ]; then
     /bin/cat <<EOF >&2
 src2ndest PRG [OPTION...] SRC [DEST...]
 
-src2ndest is a small and simple script to call PRG for one SRC and
+src2ndest is a small and simple bash script to call PRG for one SRC and
 multiple DEST.
 For example using cp or rsync as PRG you can copy files from on source
 directory to multiple destination directories.
@@ -95,7 +83,7 @@ This is equivalent to:
 rsync -a -r "-e 512" /foo/ /bar/
 
 Author: Daniel Mohr
-Date: 2022-11-29
+Date: 2022-12-06
 License: GPLv3 or any later version
 EOF
     exit 1
