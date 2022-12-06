@@ -17,6 +17,10 @@ test_alpine:
     name: alpine:latest
   script:
     - date
+    # install dependencies:
+    #   * bash for the script
+    #   * patch to create src2ndesttol
+    #   * rsync to run some tests
     - apk add --no-cache bash patch rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
@@ -30,6 +34,9 @@ test_debian:
   script:
     - date
     - apt-get update
+    # install dependencies:
+    #   * patch to create src2ndesttol
+    #   * rsync to run some tests
     - $APT_GET_INSTALL patch rsync
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
@@ -43,6 +50,10 @@ test_freebsd:
   script:
     - date
     - pkg -v
+    # install dependencies:
+    #   * bash for the script
+    #   * patch to create src2ndesttol
+    #   * rsync to run some tests
     - pkg install -y bash patch rsync
     - install -p -o root -g wheel -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
