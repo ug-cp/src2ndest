@@ -122,7 +122,6 @@ deploy_to_github:
     - (cd $repopath && git push --prune --mirror git@github.com:ug-cp/src2ndest.git)
 
 deploy_to_repo:
-  allow_failure: true
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_SERVER_HOST == "gitlab.com"
   image:
@@ -138,4 +137,7 @@ deploy_to_repo:
     - apk add --no-cache git
     - repopath=$(mktemp -d)
     - git clone --bare --mirror ${CI_REPOSITORY_URL} $repopath
+    - (cd $repopath && git branch --list --all)
+    - (cd $repopath && git for-each-ref --format 'delete %(refname)' refs/pipelines | tee >(git update-ref --stdin; cat >/dev/null))
+    - (cd $repopath && git branch --list --all)
     - (cd $repopath && git push --prune --mirror $backup_repo)
