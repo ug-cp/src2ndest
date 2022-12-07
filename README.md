@@ -106,7 +106,8 @@ parallel rsync -a -r --delete --exclude=.git -v /foo/ ::: /bar/ /baz/
 Example 3:
 
 ```sh
-src2ndest scp "-o IdentityFile=~/.ssh/id_ed25519" "-P 22" -p ~/bin/src2ndest host1:~/bin/ host2:~/bin/ host3:~/bin/
+src2ndest scp "-o IdentityFile=~/.ssh/id_ed25519" "-P 22" -p \
+~/bin/src2ndest host1:~/bin/ host2:~/bin/ host3:~/bin/
 ```
 
 This installs `src2ndest` on 3 hosts in user space. The additional parameters
