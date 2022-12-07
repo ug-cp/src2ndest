@@ -19,9 +19,17 @@ test_alpine:
     - date
     # install dependencies:
     #   * bash for the script
+    #   * openssh to run some tests
     #   * patch to create src2ndesttol
     #   * rsync to run some tests
-    - apk add --no-cache bash patch rsync
+    - apk add --no-cache bash openssh patch rsync
+    # prepare ssh for tests
+    - ssh-keygen -A
+    - /usr/sbin/sshd -e
+    - ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ''
+    - cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+    - ssh-keyscan -H localhost >> ~/.ssh/known_hosts
+    # install src2ndest, generate src2ndesttol and install src2ndesttol
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
     - install -p -o root -g root -m 755 src2ndesttol /usr/local/bin/src2ndesttol
@@ -37,7 +45,15 @@ test_debian:
     # install dependencies:
     #   * patch to create src2ndesttol
     #   * rsync to run some tests
-    - $APT_GET_INSTALL patch rsync
+    #   * ssh to run some tests
+    - $APT_GET_INSTALL patch rsync ssh
+    # prepare ssh for tests
+    - mkdir /run/sshd
+    - /usr/sbin/sshd -e
+    - ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ''
+    - cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+    - ssh-keyscan -H localhost >> ~/.ssh/known_hosts
+    # install src2ndest, generate src2ndesttol and install src2ndesttol
     - install -p -o root -g root -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
     - install -p -o root -g root -m 755 src2ndesttol /usr/local/bin/src2ndesttol
@@ -55,6 +71,11 @@ test_freebsd:
     #   * patch to create src2ndesttol
     #   * rsync to run some tests
     - pkg install -y bash patch rsync
+    # prepare ssh for tests
+    - ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ''
+    - cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+    - ssh-keyscan -H localhost >> ~/.ssh/known_hosts
+    # install src2ndest, generate src2ndesttol and install src2ndesttol
     - install -p -o root -g wheel -m 755 src2ndest /usr/local/bin/src2ndest
     - add-on/generate_tolerate_patch
     - install -p -o root -g wheel -m 755 src2ndesttol /usr/local/bin/src2ndesttol

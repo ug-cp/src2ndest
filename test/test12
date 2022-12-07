@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+mkdir a
+date > a/b
+mkdir c
+mkdir d
+
+test -f a/b
+test ! -f c/a
+test ! -f d/a
+
+echo "expect error:"
+r=0
+src2ndest rsync -a '-e ssh -p 23' a/ localhost:$(pwd)/c/ localhost:$(pwd)/d/ && exit 200 || r=$?
+test $r = 255 -o $r = 12
+
+test -f a/b
+test ! -f c/b
+test ! -f d/b
+
+src2ndest rsync -a '-e ssh -p 2222' a/ localhost:$(pwd)/c/ localhost:$(pwd)/d/ && exit 200 || r=$?
+test $r = 255 -o $r = 12
+
+test -f a/b
+test ! -f c/a
+test ! -f d/a
+
+src2ndest rsync -a '-e ssh -p 22' a/ localhost:$(pwd)/c/ localhost:$(pwd)/d/
+
+test -f a/b
+test -f c/b
+test -f d/b

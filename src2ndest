@@ -23,8 +23,8 @@ src2ndest PRG [OPTION...] SRC [DEST...]
 
 src2ndest is a small and simple bash script to call PRG for one SRC and
 multiple DEST.
-For example using cp or rsync as PRG you can copy files from on source
-directory to multiple destination directories.
+For example using cp, rsync or scp as PRG you can copy files from
+one source directory to multiple destination directories.
 
 The principle is simple:
 
@@ -75,15 +75,18 @@ parallel rsync -a -r --delete --exclude=.git -v /foo/ ::: /bar/ /baz/
 
 Example 3:
 
-src2ndest rsync -a -r "-e 512" /foo/ /bar/
+src2ndest scp "-o IdentityFile=~/.ssh/id_ed25519" "-P 22" -p ~/bin/src2ndest host1:~/bin/ host2:~/bin/ host3:~/bin/
 
-This syncs the directory /foo/ to the directory /bar/ with some parameters.
+This installs src2ndest on 3 hosts in user space. The additional parameters
+are handled correctly.
 This is equivalent to:
 
-rsync -a -r "-e 512" /foo/ /bar/
+scp -o IdentityFile=~/.ssh/id_ed25519 -P 22 -p ~/bin/src2ndest host1:~/bin/
+scp -o IdentityFile=~/.ssh/id_ed25519 -P 22 -p ~/bin/src2ndest host2:~/bin/
+scp -o IdentityFile=~/.ssh/id_ed25519 -P 22 -p ~/bin/src2ndest host3:~/bin/
 
 Author: Daniel Mohr
-Date: 2022-12-06
+Date: 2022-12-07
 License: GPLv3 or any later version
 EOF
     exit 1

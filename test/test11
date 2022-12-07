@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -ex
+
+cd "$(mktemp -d)"
+date > a
+mkdir b
+mkdir d
+
+test -f a
+test ! -f b/a
+test ! -f c
+test ! -f d/a
+
+src2ndest scp "-o IdentityFile=~/.ssh/id_ed25519" "-P 22" -p a localhost:$(pwd)/b/ localhost:$(pwd)/c localhost:$(pwd)/d/
+
+test -f a
+test -f b/a
+test -f c
+test -f d/a

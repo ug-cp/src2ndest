@@ -1,6 +1,6 @@
 ---
 author: Daniel Mohr
-date: 2022-12-06
+date: 2022-12-07
 license: GPLv3 or any later version
 home: https://gitlab.com/ug-cp/src2ndest
 mirror: https://github.com/ug-cp/src2ndest
@@ -12,8 +12,8 @@ mirror: https://github.com/ug-cp/src2ndest
 
 `src2ndest` is a small and simple bash script to call `PRG` for one `SRC` and
 multiple `DEST`.
-For example using `cp` or `rsync` as `PRG` you can copy files from on source
-directory to multiple destination directories.
+For example using `cp`, `rsync` or `scp` as `PRG` you can copy files from
+one source directory to multiple destination directories.
 
 The principle is simple:
 
@@ -24,7 +24,7 @@ as destinations `DEST`.
 
 This means you can not give a parameter to a flag directly.
 For example, instead of '-B 512' use '--block-size=512' or '"-B 512"'.
-Or instead of '-e "ssh -p 1234"' use '--rsh="ssh -p 1234"'.
+Or instead of `-e "ssh -p 1234"` use `'-e ssh -p 1234'`.
 
 If an error arises `src2ndest` terminates with the exit status of the of the
 failed command. For example if you use `rsync` to sync to 3 destinations and
@@ -106,14 +106,17 @@ parallel rsync -a -r --delete --exclude=.git -v /foo/ ::: /bar/ /baz/
 Example 3:
 
 ```sh
-src2ndest rsync -a -r "-e 512" /foo/ /bar/
+src2ndest scp "-o IdentityFile=~/.ssh/id_ed25519" "-P 22" -p ~/bin/src2ndest host1:~/bin/ host2:~/bin/ host3:~/bin/
 ```
 
-This syncs the directory `/foo/` to the directory `/bar/` with some parameters.
+This installs `src2ndest` on 3 hosts in user space. The additional parameters
+are handled correctly.
 This is equivalent to:
 
 ```sh
-rsync -a -r "-e 512" /foo/ /bar/
+scp -o IdentityFile=~/.ssh/id_ed25519 -P 22 -p ~/bin/src2ndest host1:~/bin/
+scp -o IdentityFile=~/.ssh/id_ed25519 -P 22 -p ~/bin/src2ndest host2:~/bin/
+scp -o IdentityFile=~/.ssh/id_ed25519 -P 22 -p ~/bin/src2ndest host3:~/bin/
 ```
 
 ## License
