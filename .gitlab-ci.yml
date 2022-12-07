@@ -15,6 +15,12 @@ pre-commit:
 test_alpine:
   image:
     name: alpine:latest
+  rules:
+    - changes:
+      - add-on/*
+      - .gitlab-ci.yml
+      - src2ndest
+      - test/*
   script:
     - date
     # install dependencies:
@@ -39,6 +45,12 @@ test_alpine:
 test_debian:
   image:
     name: debian:latest
+  rules:
+    - changes:
+      - add-on/*
+      - .gitlab-ci.yml
+      - src2ndest
+      - test/*
   script:
     - date
     - apt-get update
@@ -63,6 +75,12 @@ test_debian:
 test_freebsd:
   tags:
     - FreeBSD-13-amd64
+  rules:
+    - changes:
+      - add-on/*
+      - .gitlab-ci.yml
+      - src2ndest
+      - test/*
   script:
     - date
     - pkg -v
@@ -84,7 +102,7 @@ test_freebsd:
 
 deploy_to_github:
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_SERVER_HOST == "gitlab.com"
   image:
     # https://hub.docker.com/_/alpine
     name: alpine:latest
@@ -106,7 +124,7 @@ deploy_to_github:
 deploy_to_repo:
   allow_failure: true
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_SERVER_HOST == "gitlab.com"
   image:
     # https://hub.docker.com/_/alpine
     name: alpine:latest
