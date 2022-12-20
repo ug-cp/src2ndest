@@ -40,6 +40,7 @@ test_alpine:
     - add-on/generate_tolerate_patch
     - install -p -o root -g root -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
+    - r=0; src2ndest && exit 255 || r=$?; test $r = 1
     - test/run_tests
 
 test_debian:
@@ -70,6 +71,7 @@ test_debian:
     - add-on/generate_tolerate_patch
     - install -p -o root -g root -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
+    - r=0; src2ndest && exit 255 || r=$?; test $r = 1
     - test/run_tests
 
 test_freebsd:
@@ -98,6 +100,7 @@ test_freebsd:
     - add-on/generate_tolerate_patch
     - install -p -o root -g wheel -m 755 src2ndesttol /usr/local/bin/src2ndesttol
     # run tests
+    - r=0; src2ndest && exit 255 || r=$?; test $r = 1
     - test/run_tests
 
 deploy_to_github:
